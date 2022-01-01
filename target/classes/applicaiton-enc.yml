@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:mysql://101.43.95.32:7001/computer_record?useUnicode=true&characterEncoding=utf8
+    password: fehead123
+    name: computer_record
+    username: root
+    driverClassName: com.mysql.cj.jdbc.Driver
