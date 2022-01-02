@@ -32,8 +32,8 @@ public class CardMapperTest {
     @Test
     public void batchInsertByNumber(){
 
-        Integer integer = cardMapper.selectCount(null);
-        if (integer>350){
+        Long aLong = cardMapper.selectCount(null);
+        if (aLong>350){
             return;
         }
         char[] chars = "abcdefjhigklmnopqrstuvwxyz".toCharArray();
