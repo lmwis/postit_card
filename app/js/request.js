@@ -3,28 +3,26 @@ let hostPre = "http://localhost:8001"
 let RequestUtil = {
 
     getCardPage:function(current,size){
+        let r = {};
         $.ajax({
             url: hostPre+"/card/page",
             data:{
                 current:current,
                 size:size
             },
+            async:false,
             withCredentials:true,
             headers:{
               "Content-type":"application/json"
             },
             success:function (res){
-                console.log(res);
-                if(res.status==="success"){
-                    let records = res.data.records;
-                    let current = res.data.current;
-                    let pages = res.data.pages;
-                }
+                r = res;
             },
             err:function (res){
                 console.log(res);
             }
         });
+        return r;
     },
     getCardById:function (id){
         $.ajax({
