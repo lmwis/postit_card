@@ -24,6 +24,29 @@ let RequestUtil = {
         });
         return r;
     },
+    searchCard:function (key,current,size){
+        let r = {};
+        $.ajax({
+            url: hostPre+"/card/search",
+            data:{
+                key,
+                current,
+                size
+            },
+            async:false,
+            withCredentials:true,
+            headers:{
+                "Content-type":"application/json"
+            },
+            success:function (res){
+                r = res;
+            },
+            err:function (res){
+                r = res;
+            }
+        });
+        return r;
+    },
     getCardById:function (id){
         $.ajax({
             url: hostPre+"/card/"+id,

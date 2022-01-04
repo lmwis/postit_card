@@ -41,6 +41,23 @@ public class CardController extends BaseController {
         }
         throw new BusinessException(EmBusinessError.USER_NOT_EXIST,"该id不存在");
     }
+    @GetMapping("/search")
+    public FeheadResponse searchByPage(String key,int size,int current) throws BusinessException {
+
+        if(!validateNull(key,size,current)){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+
+        QueryWrapper<Card> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("title",key)
+                .or().like("body",key);
+
+        IPage<Card> page = new Page<>(current,size);
+        IPage<Card> cardIPage = cardMapper.selectPage(page, queryWrapper);
+
+        return CommonReturnType.create(cardIPage);
+
+    }
     @GetMapping("/page")
     public FeheadResponse getByPage(int size,int current) {
         IPage<Card> page = new Page<>(current,size);
