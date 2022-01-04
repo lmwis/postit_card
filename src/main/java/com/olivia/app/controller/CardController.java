@@ -11,6 +11,7 @@ import com.fehead.lang.response.FeheadResponse;
 import com.olivia.app.dao.Card;
 import com.olivia.app.dao.CardMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,13 +54,19 @@ public class CardController extends BaseController {
         return CommonReturnType.create(insert);
     }
 
-    @PutMapping("")
-    public FeheadResponse updateCard(Card card) throws BusinessException {
-        if (!validateNull(card)){
+    @PutMapping("/{id}")
+    public FeheadResponse updateCard(@PathVariable int id,String title,String body) throws BusinessException {
+        if (!validateNull(body,title)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"参数不完整");
         }
-        int insert = cardMapper.updateById(card);
-        return CommonReturnType.create(insert);
+        Card card = cardMapper.selectById(id);
+        if (card==null){
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST,"id不存在");
+        }
+        card.setTitle(title);
+        card.setBody(body);
+        cardMapper.updateById(card);
+        return CommonReturnType.create(card);
     }
 
 

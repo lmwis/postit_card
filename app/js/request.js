@@ -19,7 +19,7 @@ let RequestUtil = {
                 r = res;
             },
             err:function (res){
-                console.log(res);
+                r = res;
             }
         });
         return r;
@@ -42,7 +42,25 @@ let RequestUtil = {
     insertCard:function (){
 
     },
-    updateCard:function (){
-
+    updateCard:function (card){
+        // const data = JSON.stringify(card);
+        let r={};
+        $.ajax({
+            url: hostPre+"/card/"+card.id,
+            withCredentials:true,
+            data:{
+                body:card.body,
+                title:card.title
+            },
+            method:"put",
+            async:false,
+            success:function (res){
+                r= res;
+            },
+            err:function (res){
+                r= res;
+            }
+        });
+        return r;
     }
 }
