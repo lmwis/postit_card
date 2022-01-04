@@ -14,6 +14,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,10 +49,24 @@ public class CardController extends BaseController {
     }
 
     @PostMapping("")
-    public FeheadResponse insertCard(Card card) throws BusinessException {
-        if (!validateNull(card)){
+    public FeheadResponse insertCard(String title,String body,String expirationDate) throws BusinessException {
+        if (!validateNull(title,body,expirationDate)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"参数不完整");
         }
+        Card card = new Card();
+        card.setTitle(title);
+        card.setBody(body);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = format.parse(expirationDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+        card.setIsVisible(1);
+        card.setExpirationDate(date);
+        card.setPublicationDate(new Date(new java.util.Date().getTime()));
         int insert = cardMapper.insert(card);
         return CommonReturnType.create(insert);
     }
@@ -67,6 +84,17 @@ public class CardController extends BaseController {
         card.setBody(body);
         cardMapper.updateById(card);
         return CommonReturnType.create(card);
+    }
+
+    @DeleteMapping("/{id}")
+    public FeheadResponse deleteById(@PathVariable int id) throws BusinessException {
+        Card card = cardMapper.selectById(id);
+        if (card==null){
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST,"该id不存在");
+        }
+        cardMapper.deleteById(card);
+        return CommonReturnType.create(card);
+
     }
 
 

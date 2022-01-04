@@ -39,8 +39,44 @@ let RequestUtil = {
             }
         });
     },
-    insertCard:function (){
+    insertCard:function (title,body,expirationDate){
+        let r={};
+        $.ajax({
+            url: hostPre+"/card",
+            withCredentials:true,
+            data:{
+                title,
+                body,
+                expirationDate
+            },
+            method:"post",
+            async:false,
+            success:function (res){
+                r= res;
+            },
+            err:function (res){
+                r= res;
+            }
+        });
+        return r;
 
+    },
+    deleteCard:function (id){
+        // const data = JSON.stringify(card);
+        let r={};
+        $.ajax({
+            url: hostPre+"/card/"+id,
+            withCredentials:true,
+            method:"delete",
+            async:false,
+            success:function (res){
+                r= res;
+            },
+            err:function (res){
+                r= res;
+            }
+        });
+        return r;
     },
     updateCard:function (card){
         // const data = JSON.stringify(card);
