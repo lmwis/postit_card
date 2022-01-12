@@ -65,14 +65,23 @@ public class CardController extends BaseController {
         return CommonReturnType.create(cardIPage);
     }
 
+    /**
+     * 新增
+     * @param title
+     * @param body
+     * @param expirationDate
+     * @return
+     * @throws BusinessException
+     */
     @PostMapping("")
-    public FeheadResponse insertCard(String title,String body,String expirationDate) throws BusinessException {
+    public FeheadResponse insertCard(String title,String body,String expirationDate,int isVisible) throws BusinessException {
         if (!validateNull(title,body,expirationDate)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"参数不完整");
         }
         Card card = new Card();
         card.setTitle(title);
         card.setBody(body);
+        card.setIsVisible(isVisible);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
@@ -81,7 +90,6 @@ public class CardController extends BaseController {
             e.printStackTrace();
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
-        card.setIsVisible(1);
         card.setExpirationDate(date);
         card.setPublicationDate(new Date(new java.util.Date().getTime()));
         int insert = cardMapper.insert(card);
@@ -89,7 +97,7 @@ public class CardController extends BaseController {
     }
 
     @PutMapping("/{id}")
-    public FeheadResponse updateCard(@PathVariable int id,String title,String body) throws BusinessException {
+    public FeheadResponse updateCard(@PathVariable int id,String title,String body,int isVisible) throws BusinessException {
         if (!validateNull(body,title)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"参数不完整");
         }
@@ -99,6 +107,7 @@ public class CardController extends BaseController {
         }
         card.setTitle(title);
         card.setBody(body);
+        card.setIsVisible(isVisible);
         cardMapper.updateById(card);
         return CommonReturnType.create(card);
     }

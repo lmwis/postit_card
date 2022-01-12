@@ -29,6 +29,8 @@
                     {{curCard.body}}
                 </div>
                 <hr>
+                &nbsp;&nbsp;&nbsp;是否可见：{{curCard.isVisible}}
+                <hr>
                 <div>
                     <div class="input-group">
                         <span class="input-group-addon">过期时间</span>
@@ -67,6 +69,20 @@
                         <span class="input-group-addon">内容</span>
                         <input type="text" class="form-control" v-model:value="preCard.body"
                                aria-describedby="sizing-addon2">
+                    </div>
+                    <!-- Single button -->
+                    是否可见：
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{preCard.isVisible}}
+                            <span class="caret">
+
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" @click="changePreCardVisible('是')">是</a></li>
+                            <li><a href="#" @click ="changePreCardVisible('否')">否</a></li>
+                        </ul>
                     </div>
                 </div>
                 <hr>
@@ -110,7 +126,17 @@
                         <input type="text" class="form-control" v-model:value="newCard.body"
                                aria-describedby="sizing-addon2">
                     </div>
-
+                    是否可见：
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{newCard.isVisible}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" @click="changeNewCardVisible('是')">是</a></li>
+                            <li><a href="#" @click ="changeNewCardVisible('否')">否</a></li>
+                        </ul>
+                    </div>
                     <div class="input-group">
                         <span class="input-group-addon">过期时间</span>
                         <input type="text" id="expirationDate"
@@ -229,13 +255,23 @@
                 $('#detailModel').modal('show');
             },
             insertPage: function () {
-                this.newCard = {};
-
+                this.newCard = {
+                    isVisible:"是"
+                };
                 $('#insertModel').modal('show');
+            },
+            changePreCardVisible:function(target){
+                this.preCard.isVisible=target;
+            },
+            changeNewCardVisible:function (target){
+                // console.log(this.newCard)
+                this.newCard.isVisible=target;
+                // console.log(this.newCard)
             },
             insertCard: function () {
                 const card = this.newCard;
-                const res = RequestUtil.insertCard(card.title, card.body, card.expirationDate);
+                card.isVisible = card.isVisible==="是"?1:0;
+                const res = RequestUtil.insertCard(card.title, card.body, card.expirationDate,card.isVisible);
                 if (res.status !== "success") {
                     layui.use('layer', function () {
                         var layer = layui.layer;
@@ -250,6 +286,7 @@
                             icon: 1
                         });
                     });
+                    $('#insertModel').modal('hide');
                 }
                 this.init();
             },
@@ -360,6 +397,7 @@
                     return;
                 }
                 console.log("执行修改");
+                preCard.isVisible = preCard.isVisible==="是"?1:0;
                 const res = RequestUtil.updateCard(preCard);
                 if (res.status === "success") {
                     layui.use('layer', function () {

@@ -62,7 +62,7 @@ let RequestUtil = {
             }
         });
     },
-    insertCard:function (title,body,expirationDate){
+    insertCard:function (title,body,expirationDate,isVisible){
         let r={};
         $.ajax({
             url: hostPre+"/card",
@@ -70,6 +70,7 @@ let RequestUtil = {
             data:{
                 title,
                 body,
+                isVisible,
                 expirationDate
             },
             method:"post",
@@ -109,7 +110,8 @@ let RequestUtil = {
             withCredentials:true,
             data:{
                 body:card.body,
-                title:card.title
+                title:card.title,
+                isVisible:card.isVisible
             },
             method:"put",
             async:false,
