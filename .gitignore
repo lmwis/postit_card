@@ -28,3 +28,6 @@ target
 # config
 generatorConfig.xml
 application-enc.yml
+
+# mac file
+.DS_Store
